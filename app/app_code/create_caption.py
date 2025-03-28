@@ -26,7 +26,7 @@ def mergeTags(entities):  # Function to merge tags
     return entities  # Returns the entire entities dictionary
 
 
-def create_caption(image_type, image_path, text, URL=False, fetch_db=True):
+def create_caption(image_type, image_path, text, URL=False, fetch_db=True, training=True):
     # Flag to bypass database access for testing
     if fetch_db:
         # Open cache database
