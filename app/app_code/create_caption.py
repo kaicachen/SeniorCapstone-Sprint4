@@ -89,7 +89,7 @@ def create_caption(image_type, image_path, text, URL=False, fetch_db=True, train
         tags += f"{person}, "
     '''
 
-    alt_text = geminiGenerate(image_type, caption,text,tags) # Pass the created caption and extracted tags to our alt-text generator
+    alt_text = geminiGenerate(image_type, caption,text,tags, image_path, training) # Pass the created caption and extracted tags to our alt-text generator
 
     if fetch_db:
         # Store in database
@@ -129,5 +129,5 @@ if __name__ == "__main__":
     image_path = "basketball.jpg"
     text = "No. 17 Kansas defeated Colorado 71-59 on Tuesday night at Allen Fieldhouse. The Jayhawks (17-7, 8-5 Big 12) won their first of two matchups between the sides. A big reason for that was KU’s defense — a calling card for Bill Self teams. The Jayhawks stepped up on that end in pivotal moments, doing so in a new look of sorts on Tuesday."
 
-    caption = create_caption(os.path.join("app", "app_code", "inputs", "Images", image_path), text)
+    caption = create_caption("LINK" ,os.path.join("app", "app_code", "inputs", "Images", image_path), text)
     print(f"Caption: {caption}")
