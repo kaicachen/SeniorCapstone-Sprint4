@@ -1,6 +1,7 @@
 import google.generativeai as genai
 import os
 import json
+from train_flan import add_to_dataset
 
 def geminiGenerate(image_type, caption,text,tags, image_url, training=False):
     API_KEY = retrieveKey()
@@ -29,11 +30,7 @@ def geminiGenerate(image_type, caption,text,tags, image_url, training=False):
         )
     #if training, save prompt and response to a file.
     if training:
-        training_data = [
-            {
-                "link" : f"{image_url}",
-                "input": 
-                    f"You are generating **ADA-compliant** alt text based on the given **caption, surrounding text, and tags**.\n\n"
+        prompt = (f"You are generating **ADA-compliant** alt text based on the given **caption, surrounding text, and tags**.\n\n"
                     f"### **Input Data:**\n"
                     f"- **Caption:** {caption}\n"
                     f"- **Surrounding Text:** {text}\n"
@@ -51,16 +48,8 @@ def geminiGenerate(image_type, caption,text,tags, image_url, training=False):
                     f"**Good Alt Text:** 'A person in a wheelchair crossing the street on a sunny day.' (Concise, relevant, and informative)\n"
                     f"**Bad Alt Text:** 'An image of a person outside.' (Too vague, lacks key details)\n\n"
 
-                    f"Now, generate **one** alt text description following these rules.",
-                "output": "DUMMY OUTPUT"
-            }
-        ]
-        jsonl_filename = "alt_text_dataset_pre.jsonl"
-        with open(os.path.join("app", "app_code", "outputs", "training_json","unprocessed", f"{jsonl_filename}"), "a", encoding="utf-8") as file:
-            for entry in training_data:
-                file.write(json.dumps(entry, ensure_ascii=False) + "\n")
-
-        print(f"Dataset saved as {jsonl_filename}")
+                    f"Now, generate **one** alt text description following these rules.")
+        add_to_dataset("gemini", image_url, prompt)
         
     return response.text
 
