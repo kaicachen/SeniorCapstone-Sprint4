@@ -18,6 +18,20 @@ import json
 import os
 
 
+from google import generativeai as genai
+
+from google.generativeai.models import list_models
+from google.generativeai.models import create_tuned_model
+from google.generativeai.models import update_tuned_model
+
+from google.generativeai import types
+
+
+def retrieveKey():
+    file = open("key.txt","r")
+    return file.readline()
+
+
 # training_args = TrainingArguments(output_dir="test_trainer", eval_strategy="epoch")
 def add_to_dataset(dataset_filename:str, image_url:str, prompt:str): #used to make the dataset in a program for help.
     #add to the dataset into a jsonl file
@@ -119,6 +133,30 @@ def complete_dataset(dataset_filename:str): #where dataset is the name of the js
         
     print(f"Updated dataset saved as {new_file_dir}")  # Print the location of the saved file
 
+def create_gemini_model(dataset_filename:str): #where dataset is the name of the json file
+    #call the google create model thing to do the thing
+    create_tuned_model(genai.GenerativeModel("gemini-1.5-flash"),
+                       dataset_filename,
+                       "ada_gemini-1.5-flash",
+                        "ADA gemini",
+                        "Model for generating ADA compliant alt text")
+                        # temperature= 0.0,
+                        # top_p: float | None = None,
+                        # top_k: int | None = None,
+                        # epoch_count: int | None = None,
+                        # batch_size: int | None = None,
+                        # learning_rate: float | None = None,
+                        # input_key: str = "text_input",
+                        # output_key: str = "output",
+                        # client: ModelServiceClient | None = None,
+                        # request_options: RequestOptionsType | None = None)
+
+    pass
+
+def update_gemini_model(dataset_filename:str): #where dataset is the name of the json file
+    pass
+    
+
 def display_image(url):
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
@@ -131,5 +169,13 @@ def display_image(url):
 
 
 if __name__ == "__main__":  # Used for testing purposes
+    genai.configure(api_key=retrieveKey())
 
-    complete_dataset("gemini.jsonl")
+    print()
+    list_models() 
+    print()
+    
+    # for model_info in genai.models.list():  # List all available models
+    #     print(model_info.name)
+
+    #complete_dataset("gemini.jsonl")
